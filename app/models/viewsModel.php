@@ -7,7 +7,7 @@ class viewsModel
   protected function obtenerVistasModelo($vista)
   {
     // los nombres de las vistas
-    $listaBlanca = ["dashboard"];
+    $listaBlanca = ["dashboard", "userNew", "userList", "userSearch", "userUptade", "userPhoto", "logOut"];
     if (in_array($vista, $listaBlanca)) {
       // verificar si esa vista existe en el directorio va a debolver la vista o si no la vista de 404
       if (is_file("./app/views/contents/$vista-view.php")) {
