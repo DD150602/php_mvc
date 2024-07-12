@@ -1,0 +1,73 @@
+const formularios_ajax = document.querySelectorAll(".FormularioAjax")
+
+formularios_ajax.forEach(formularios => {
+  formularios.addEventListener('submit', function(e){
+    e.preventDefault()
+
+    Swal.fire({
+      title: 'Estas Seguro?',
+      text: "Quieres Realizar la accion seleccionada?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Realizar',
+      cancelButtonText: 'No, Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let data  = new FormData(this)
+        let method  = this.getAttribute('method')
+        let action  = this.getAttribute('action')
+        let encabezados = new Headers()
+        let config = {
+          method,
+          encabezados,
+          mode: 'cors',
+          cache: 'no-cache',
+        }
+
+        fetch(action, config)
+        .then(response => response.json())
+        .then(data => {
+          return alertas_ajax(data)
+        })
+      }
+    })
+
+  })
+});
+
+function alertas_ajax(alerta){
+  if(alerta.tipo === 'simple'){
+    Swal.fire({
+      icon: alerta.icono,
+      title: alerta.titulo,
+      text: alerta.texto,
+      confirmButtonText: 'Aceptar'
+    });
+  }else if (alerta.tipo === 'recargar'){
+    Swal.fire({
+      icon: alerta.icono,
+      title: alerta.titulo,
+      text: alerta.texto,
+      confirmButtonText: 'Aceptar'
+    }).then((result) => {
+      if(result.isConfirmed){
+        location.reload()
+      }
+    });
+  }else if (alerta.tipo === 'limpiar'){
+    Swal.fire({
+      icon: alerta.icono,
+      title: alerta.titulo,
+      text: alerta.texto,
+      confirmButtonText: 'Aceptar'
+    }).then((result) => {
+      if(result.isConfirmed){
+        document.querySelector('.FormularioAjax').reset()
+      }
+    });
+  }else if(alerta.tipo === 'redireccionar'){
+    window.location.href = alerta.url
+  }
+}
