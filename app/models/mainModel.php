@@ -4,16 +4,16 @@ namespace app\models;
 
 use \PDO;
 
-if (file_exists(__DIR__ . "/../../config/app.php")) {
-  require_once(__DIR__ . "/../../config/app.php");
+if (file_exists(__DIR__ . "/../../config/server.php")) {
+  require_once(__DIR__ . '/../../config/server.php');
 }
 
 class mainModel
 {
-  private $server = $DB_HOST;
-  private $user = $DB_USER;
-  private $password = $DB_PASS;
-  private $db = $DB_NAME;
+  private $server = DB_SERVER;
+  private $user = DB_USER;
+  private $password = DB_PASS;
+  private $db = DB_NAME;
 
   protected function conectar()
   {
