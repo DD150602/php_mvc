@@ -16,14 +16,15 @@ formularios_ajax.forEach(formularios => {
     }).then((result) => {
       if (result.isConfirmed) {
         let data  = new FormData(this)
-        let method  = this.getAttribute('method')
-        let action  = this.getAttribute('action')
+        let method = this.getAttribute('method')
+        let action = this.getAttribute('action')
         let encabezados = new Headers()
         let config = {
           method,
-          encabezados,
+          headers: encabezados,
           mode: 'cors',
           cache: 'no-cache',
+          body: data
         }
 
         fetch(action, config)
