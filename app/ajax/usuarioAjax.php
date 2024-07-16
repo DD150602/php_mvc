@@ -19,6 +19,9 @@ if (isset($_POST['modulo_usuario'])) {
   if ($_POST['modulo_usuario'] == "actualizar") {
     echo $insUsuario->actualizarUsuarioControlador();
   }
+  if ($_POST['modulo_usuario'] == "actualizarFoto") {
+    echo $insUsuario->actualizarFotoUsuarioControlador();
+  }
 } else {
   // evitar que se acceda a la ruta 
   session_destroy();
