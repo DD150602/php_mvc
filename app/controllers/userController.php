@@ -833,4 +833,89 @@ class userController extends mainModel
 
     return json_encode($alerta);
   }
+
+  public function eliminarFotoUsuarioControlador()
+  {
+    $id = $this->limpiarCadena($_POST['usuario_id']);
+    $datos = $this->ejecutarConsulta("SELECT * FROM usuario WHERE usuario_id = '$id'");
+
+    if ($datos->rowCount() <= 0) {
+      $alerta = array(
+        "tipo" => "simple",
+        "titulo" => "Usuario inexistente",
+        "texto" => "No se ha encontrado el usuario en el sistema",
+        "icono" => "error"
+      );
+      return json_encode($alerta);
+      exit();
+    } else {
+      $datos = $datos->fetch();
+    }
+
+    $img_dir = "../views/fotos/";
+
+    chmod($img_dir, 0777);
+    if (is_file($img_dir . $datos['usuario_foto'])) {
+      chmod($img_dir . $datos['usuario_foto'], 0777);
+      if (!unlink($img_dir . $datos['usuario_foto'])) {
+        $alerta = array(
+          "tipo" => "simple",
+          "titulo" => "No se ha podido eliminar la imagen",
+          "texto" => "No se ha podido borrar la imagen del usuario en el sistema",
+          "icono" => "error"
+        );
+        return json_encode($alerta);
+        exit();
+      }
+    } else {
+      $alerta = array(
+        "tipo" => "simple",
+        "titulo" => "Foto inexistente",
+        "texto" => "No se ha encontrado la foto en el sistema",
+        "icono" => "error"
+      );
+      return json_encode($alerta);
+      exit();
+    }
+
+    $usuario_datos_up = [
+      [
+        "campo_nombre" => "usuario_foto",
+        "campo_marcador" => ":foto",
+        "campo_valor" => ""
+      ],
+      [
+        "campo_nombre" => "usuario_actualizado",
+        "campo_marcador" => ":Actualizado",
+        "campo_valor" => date("Y-m-d H:i:s")
+      ]
+    ];
+
+    $condicion = [
+      "condicion_campo" => "usuario_id",
+      "condicion_marcador" => ":ID",
+      "condicion_valor" => $id
+    ];
+
+    if ($this->actualizarDatos("usuario", $usuario_datos_up, $condicion)) {
+
+      if ($id == $_SESSION['id']) {
+        $_SESSION['foto'] = "";
+      }
+      $alerta = [
+        "tipo" => "recargar",
+        "titulo" => "Foto eliminada",
+        "texto" => "La foto del usuario " . $datos['usuario_nombre'] . " " . $datos['usuario_apellido'] . " se eliminio correctamente",
+        "icono" => "success"
+      ];
+    } else {
+      $alerta = array(
+        "tipo" => "recargar",
+        "titulo" => "Foto eliminada",
+        "texto" => "No hemos podido actualizar algunos datos del usuario " . $datos['usuario_nombre'] . " " . $datos['usuario_apellido'] . " sin embargo la foto se elimino correctamente",
+        "icono" => "warning"
+      );
+    }
+    return json_encode($alerta);
+  }
 }
