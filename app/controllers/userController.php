@@ -23,7 +23,8 @@ class userController extends mainModel
         "texto" => "No has llenado todos los campos que son obligatorios",
         "icono" => "error"
       );
-      return $alerta;
+      return json_encode($alerta);
+      exit();
     }
 
     if ($this->verificarDatos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,40}", $nombre)) {
@@ -372,5 +373,57 @@ class userController extends mainModel
     }
 
     return $tabla;
+  }
+
+  public function eliminarUsuarioControlador()
+  {
+    $id = $this->limpiarCadena($_POST['usuario_id']);
+
+    if ($id == 1) {
+      $alerta = array(
+        "tipo" => "simple",
+        "titulo" => "Intento de Eliminar",
+        "texto" => "No se puede eliminar el usuario Administrador",
+        "icono" => "error"
+      );
+      return json_encode($alerta);
+      exit();
+    }
+
+    $datos = $this->ejecutarConsulta("SELECT * FROM usuario WHERE usuario_id = '$id'");
+
+    if ($datos->rowCount() <= 0) {
+      $alerta = array(
+        "tipo" => "simple",
+        "titulo" => "Usuario inexistente",
+        "texto" => "No se ha encontrado el usuario en el sistema",
+        "icono" => "error"
+      );
+      return json_encode($alerta);
+      exit();
+    } else {
+      $datos = $datos->fetch();
+    }
+    $eliminarUsuario = $this->eliminarRegistro("usuario", "usuario_id", $id);
+    if ($eliminarUsuario->rowCount() == 1) {
+      if (is_file("../views/fotos/" . $datos['usuario_foto'])) {
+        chmod("../views/fotos/" . $datos['usuario_foto'], 0777);
+        unlink("../views/fotos/" . $datos['usuario_foto']);
+      }
+      $alerta = array(
+        "tipo" => "recargar",
+        "titulo" => "Usuario eliminado",
+        "texto" => "El usuario " . $datos['usuario_nombre'] . " " . $datos['usuario_apellido'] . " se elimino con exito",
+        "icono" => "success"
+      );
+    } else {
+      $alerta = array(
+        "tipo" => "simple",
+        "titulo" => "Error en la eliminación",
+        "texto" => "No se pudo eliminar el usuario " . $datos['usuario_nombre'] . " " . $datos['usuario_apellido'],
+        "icono" => "success"
+      );
+    }
+    return json_encode($alerta);
   }
 }
