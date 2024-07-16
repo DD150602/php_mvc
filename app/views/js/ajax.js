@@ -72,3 +72,23 @@ function alertas_ajax(alerta){
     window.location.href = alerta.url
   }
 }
+
+let btn_exit = document.getElementById('btn-exit')
+btn_exit.addEventListener('click', function(e){
+  e.preventDefault()
+  Swal.fire({
+    title: 'Quieres salir de la pagina?',
+    text: "la sesion actual se cerrara y saldras de la pagina",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, Realizar',
+    cancelButtonText: 'No, Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      let url = this.getAttribute('href')
+      window.location.href = url
+    }
+  })
+})
