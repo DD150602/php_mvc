@@ -122,7 +122,7 @@ class mainModel
       $query .= $clave['campo_nombre'] . "=" . $clave['campo_marcador'];
       $C++;
     }
-    $query .= " WHERE " . $condicion['condicion_campo'] .= "=" . $condicion['condicion_marcador'];
+    $query .= " WHERE " . $condicion['condicion_campo'] . "=" . $condicion['condicion_marcador'];
     $sql = $this->conectar()->prepare($query);
     foreach ($datos as $clave) {
       // bindParam es para vincular un parametro con una variable especifica
@@ -130,6 +130,7 @@ class mainModel
     }
     $sql->bindParam($condicion['condicion_marcador'], $condicion['condicion_valor']);
     $sql->execute();
+    return $sql;
   }
 
   protected function eliminarRegistro($tabla, $campo, $id)

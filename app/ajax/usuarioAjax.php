@@ -16,6 +16,9 @@ if (isset($_POST['modulo_usuario'])) {
   if ($_POST['modulo_usuario'] == "eliminar") {
     echo $insUsuario->eliminarUsuarioControlador();
   }
+  if ($_POST['modulo_usuario'] == "actualizar") {
+    echo $insUsuario->actualizarUsuarioControlador();
+  }
 } else {
   // evitar que se acceda a la ruta 
   session_destroy();
