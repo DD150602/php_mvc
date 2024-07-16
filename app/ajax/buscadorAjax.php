@@ -12,7 +12,9 @@ if (isset($_POST['modulo_buscador'])) {
   if ($_POST['modulo_buscador'] == "buscar") {
     echo $insBuscador->iniciarBuscadorControlador();
   }
-
+  if ($_POST['modulo_buscador'] == "eliminar") {
+    echo $insBuscador->eliminarBuscadorControlador();
+  }
 } else {
   // evitar que se acceda a la ruta 
   session_destroy();
