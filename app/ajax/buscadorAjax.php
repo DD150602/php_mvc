@@ -9,7 +9,9 @@ use app\controllers\searchController;
 // el 'modulo_usuario' es para saber si se esta utilizando el formulario de registrar
 if (isset($_POST['modulo_buscador'])) {
   $insBuscador = new searchController();
-  
+  if ($_POST['modulo_buscador'] == "buscar") {
+    echo $insBuscador->iniciarBuscadorControlador();
+  }
 
 } else {
   // evitar que se acceda a la ruta 
